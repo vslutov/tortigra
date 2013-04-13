@@ -1,0 +1,15 @@
+extends base
+
+block content
+  form.form-horizontal(method="post", action="/init-controller")
+    .control-group
+      label.control-label Source
+      .controls
+        input(type="text", name="source")
+    .control-group
+      label.control-label Destination
+      .controls
+        input(type="text", name="destination")
+    .control-group
+      .controls
+        input(type="submit", name="submit", value="Submit").btn.btn-primary

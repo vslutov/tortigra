@@ -1,0 +1,8 @@
+.expand
+.content #{dirname}
+ul.tree
+  for file in files
+    li(data-dirname="#{file.path}")
+      .expand
+      .content #{file.name}
+      ul.tree

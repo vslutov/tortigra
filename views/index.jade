@@ -1,0 +1,8 @@
+extends base
+
+append head
+  script(src='/js/tree.js')
+
+block sidebar
+  ul.tree
+    li.is-root(data-dirname="#{dirpath}")

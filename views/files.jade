@@ -1,0 +1,12 @@
+ul.breadcrumb
+  li(data-pathname="", data-type="folder") 
+    a #{root}
+    span.divider /
+  for dir in bread
+    li(data-pathname="#{dir.path}", data-type="folder") 
+      a #{dir.name}
+      span.divider /
+ul.files
+  for file in files
+    li(data-pathname="#{file.path}", data-type="#{file.type}")
+      | #{file.name}

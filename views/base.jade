@@ -1,0 +1,32 @@
+!!!5
+html(lang='ru')
+  head
+    block head
+      meta(charset='utf-8')
+      title #{title} - Tortigra
+      link(rel='stylesheet', href='/css/tortigra.css')
+      script(src='/js/jquery.min.js')
+      script(src='/js/bootstrap.min.js')
+  body.container-fluid
+    header.row-fluid.page-header
+      .navbar
+        .navbar-inner
+          a(href="/").brand Tortigra
+          ul.nav
+            li#Home
+              a(href="/") Home
+            li#Help
+              a(href="/help") Help
+            li#Init
+              a(href="/init") Init
+    .row-fluid
+      #sidebar.span3
+        block sidebar
+      #content.span9.hero-unit
+        block content
+    footer
+      | Change your life for the better 
+    
+    :coffeescript
+      $(document).ready () =>
+        $('##{title}').addClass('active')

@@ -1,0 +1,111 @@
+@import "bootstrap.less";
+
+html {height: 100%;}
+body {
+  min-height: 100%;
+  position: relative;
+}
+footer {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  background-color: #9cf;
+  color: black;
+}
+
+ul.breadcrumb a { cursor: pointer; }
+
+.files {
+  li {
+    list-style-image: url(/img/document.png);
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,.055);
+    transition: all .2s ease-in-out;
+    &:hover, &:focus { box-shadow: 0 1px 4px rgba(0,105,214,.25); }
+    &[data-type="folder"]{ list-style-image: url(/img/folder.png) }
+    &[data-type="image"]{ list-style-image: url(/img/image.png) }
+    &[data-type="video"]{ list-style-image: url(/img/video.png) }
+    &[data-type="application"]{ list-style-image: url(/img/application.png) }
+  }
+}
+
+/* Tree CSS */
+@expand-size: 14px;
+
+.tree {
+  padding: 0;
+  margin: 0;
+
+  li {
+    list-style: none;
+    margin-left: @expand-size;
+    background-image : url(/img/i.png);
+    background-position : top left;
+    background-repeat : repeat-y;
+    
+    &:last-child{
+      background-image: url(/img/i_half.png);
+      background-repeat : no-repeat;
+    }
+  }
+
+  .active > .content {
+    background-color: #cff;
+  }
+
+  .is-root:last-child {
+    background-image: none;
+    margin-left: 0;
+  }
+
+  .content {
+    margin-left: @expand-size;
+    min-height: @expand-size;
+    cursor: pointer;
+  }
+
+  li {
+    // Closed
+    > .expand {
+      background-image: url("/img/glyphicons-halflings.png");
+      background-repeat: no-repeat;
+      width: @expand-size;
+      height: @expand-size;
+      float: left;
+      .icon-plus;
+      cursor: pointer;
+    }
+
+    > .tree {
+      display: none;
+    }
+    
+    // Opened
+    &.opened {
+      > .expand {
+        .icon-minus;
+        cursor: pointer;
+      }
+
+      > .tree {
+        display: block;
+      }
+    }
+
+    // Leaf
+    &.leaf { 
+      > .expand {
+        .icon-chevron-right;
+        cursor: auto;
+      }
+    }
+
+    // Loading
+    &.loading {
+      > .expand {
+        .icon-time;
+      }
+    }
+  }
+}
