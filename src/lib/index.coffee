@@ -5,7 +5,7 @@ require('sugar')
 
 global.app = express()
 
-app.set 'tortigra source', 'C:/'
+app.set 'tortigra source', '/'
 app.set 'tortigra destination', '/dest/'
 
 app.set 'port', 6600

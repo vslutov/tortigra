@@ -40,4 +40,4 @@ $(document).ready () =>
 
 
 
-  toggleNode $('.is-root')
+  loadFolder $('.is-root').attr('data-dirname')
