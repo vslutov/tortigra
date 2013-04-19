@@ -17,36 +17,75 @@ footer {
 ul.breadcrumb a { cursor: pointer; }
 
 .files {
+  @fileicon-size: 32px;
+
   li {
-    list-style-image: url(/img/document.png);
+    list-style: none;
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0,0,0,.055);
-    transition: all .2s ease-in-out;
-    &:hover, &:focus { box-shadow: 0 1px 4px rgba(0,105,214,.25); }
-    &[data-type="folder"]{ list-style-image: url(/img/folder.png) }
-    &[data-type="image"]{ list-style-image: url(/img/image.png) }
-    &[data-type="video"]{ list-style-image: url(/img/video.png) }
-    &[data-type="application"]{ list-style-image: url(/img/application.png) }
+
+    > img {
+      width: @fileicon-size;
+      height: @fileicon-size;
+      float: left;
+    }
+
+    > input {
+      @margin-size: 2px;
+      width: (@fileicon-size - (2 * @margin-size));
+      height: (@fileicon-size - (2 * @margin-size));
+      margin: @margin-size;
+      float: left;
+    }
+
+    > .content {
+      margin-left: (2 * @fileicon-size);
+      min-height: @fileicon-size;
+      cursor: pointer;
+    }
+
   }
 }
 
 /* Tree CSS */
-@expand-size: 14px;
-
 .tree {
+  @expand-size: 14px;
   padding: 0;
   margin: 0;
 
   li {
     list-style: none;
-    margin-left: @expand-size;
+    margin-left: (2 * @expand-size);
     background-image : url(/img/i.png);
     background-position : top left;
     background-repeat : repeat-y;
     
-    &:last-child{
+    &:last-child {
       background-image: url(/img/i_half.png);
       background-repeat : no-repeat;
+    }
+
+    > input {
+      @margin-size: 2px;
+      width: (@expand-size - (2 * @margin-size));
+      height: (@expand-size - (2 * @margin-size));
+      float: left;
+      margin: @margin-size;
+      cursor: auto;
+    }
+
+    > .expand {
+      background-image: url("/img/glyphicons-halflings.png");
+      background-repeat: no-repeat;
+      width: @expand-size;
+      height: @expand-size;
+      float: left;
+      cursor: pointer;
+    }
+
+    > .content {
+      margin-left: (2 * @expand-size);
+      min-height: @expand-size;
+      cursor: pointer;
     }
   }
 
@@ -56,25 +95,13 @@ ul.breadcrumb a { cursor: pointer; }
 
   .is-root:last-child {
     background-image: none;
-    margin-left: 0;
-  }
-
-  .content {
     margin-left: @expand-size;
-    min-height: @expand-size;
-    cursor: pointer;
   }
 
   li {
     // Closed
     > .expand {
-      background-image: url("/img/glyphicons-halflings.png");
-      background-repeat: no-repeat;
-      width: @expand-size;
-      height: @expand-size;
-      float: left;
       .icon-plus;
-      cursor: pointer;
     }
 
     > .tree {

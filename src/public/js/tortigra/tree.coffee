@@ -14,6 +14,7 @@ $(document).ready () =>
     toggleNode parent
 
   loadFolder = (dirname) ->
+    console.log dirname
     $('.tree .active').removeClass 'active'
     node = $(".tree li[data-dirname='" + dirname + "']")
     node.addClass 'active'
@@ -22,6 +23,7 @@ $(document).ready () =>
     $('#content').load '/files', {dirname: dirname}, () =>
       $('#content li').bind 'click', (e) =>
         elem = $(e.currentTarget)
+        console.log elem
         if elem.attr('data-type') is 'folder'
           loadFolder elem.attr('data-pathname')
 

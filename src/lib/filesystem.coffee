@@ -73,27 +73,27 @@ exports.files = (req, res) ->
       for file in fileArrayToFiles(dirname, files)
         try
           if fs.statSync( app.get('tortigra source') + file.path ).isDirectory() 
-            file.type = 'folder'
+            file.icon = 'folder'
             file.path += '/'
           else if /// (?:\.) (?: 
             jpe?g | png | gif | 
             bmp | tiff | raw | 
             ico | svg | wbmp
            ) $ ///.test(file.path)
-            file.type = 'image'
+            file.icon = 'image'
           else if /// (?:\.) (?: 
             mpe?g | mp4  | avi | 
             webm | ogg | flv | 
             wmv | mkv
            ) $ ///.test(file.path) 
-            file.type = 'video'         
+            file.icon = 'video'         
           else if /// (?:\.) (?: 
             exe | bat | sh |
             py | php | perl
            ) $ ///.test(file.path) 
-            file.type = 'application' 
+            file.icon = 'app' 
           else 
-            file.type = 'file'
+            file.icon = 'file'
           filelist.push file
     context.files = filelist
     res.render 'files', context

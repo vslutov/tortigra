@@ -1,8 +1,10 @@
 .expand
+input(type="checkbox")
 .content #{dirname}
 ul.tree
   for file in files
     li(data-dirname="#{file.path}")
       .expand
+      input(type="checkbox")
       .content #{file.name}
       ul.tree

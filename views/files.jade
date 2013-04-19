@@ -8,5 +8,7 @@ ul.breadcrumb
       span.divider /
 ul.files
   for file in files
-    li(data-pathname="#{file.path}", data-type="#{file.type}")
-      | #{file.name}
+    li(data-pathname="#{file.path}", data-type="#{file.icon}")
+      img(src="/img/#{file.icon}.png")
+      input(type="checkbox")
+      .content #{file.name}
