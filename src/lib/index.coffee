@@ -1,7 +1,7 @@
 express = require('express')
-filesystem = require('./filesystem.js')
-content = require('./content.js')
-require('sugar')
+ajax = require('./ajax.js')
+template = require('./template.js')
+logic = require('./logic.js')
 
 global.app = express()
 
@@ -17,15 +17,17 @@ app.use express.logger('dev')
 app.use express.static('./public')
 app.use express.bodyParser()
 
-app.get '/', content.root
-app.get '/init', content.init
-app.get '/help', content.help
+app.get '/', template.root
+app.get '/init', template.init
+app.get '/help', template.help
 
-app.post '/leaf', filesystem.leaf
-app.post '/init-controller', filesystem.initController 
-app.post '/list', filesystem.list
-app.post '/files', filesystem.files
+app.post '/leaf', ajax.leaf
+app.post '/init-controller', ajax.initController 
+app.post '/list', ajax.list
+app.post '/files', ajax.files
 
+app.post '/add', logic.add
+app.post '/remove', logic.remove
 
 app.listen app.get('port')
 console.log 'Now going to http:/localhost:' + app.get('port') + '/'

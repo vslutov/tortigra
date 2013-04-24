@@ -4,11 +4,11 @@ ul.breadcrumb
     span.divider /
   for dir in bread
     li(data-pathname="#{dir.path}", data-type="folder") 
-      a #{dir.name}
+      a.content #{dir.name}
       span.divider /
 ul.files
   for file in files
     li(data-pathname="#{file.path}", data-type="#{file.icon}")
       img(src="/img/#{file.icon}.png")
-      input(type="checkbox")
+      input(type="checkbox", value="#{file.name}")
       .content #{file.name}

@@ -19,9 +19,8 @@ ul.breadcrumb a { cursor: pointer; }
 .files {
   @fileicon-size: 32px;
 
-  li {
+  > li {
     list-style: none;
-    cursor: pointer;
 
     > img {
       width: @fileicon-size;
@@ -35,6 +34,7 @@ ul.breadcrumb a { cursor: pointer; }
       height: (@fileicon-size - (2 * @margin-size));
       margin: @margin-size;
       float: left;
+      cursor: auto;
     }
 
     > .content {
@@ -54,7 +54,7 @@ ul.breadcrumb a { cursor: pointer; }
 
   li {
     list-style: none;
-    margin-left: (2 * @expand-size);
+    margin-left: @expand-size;
     background-image : url(/img/i.png);
     background-position : top left;
     background-repeat : repeat-y;
