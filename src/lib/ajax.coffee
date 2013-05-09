@@ -1,4 +1,8 @@
 filesystem = require('./filesystem.js')
+require('sugar')
+
+isChecked = (pathname) ->
+  app.locals.task.some (elem) -> pathname.startsWith(elem) and elem.endsWith('/') or elem is '' or elem is pathname
 
 exports.leaf = (req, res) ->
   filesystem.getDirList req.param('pathname'), (err, files) =>
@@ -14,11 +18,17 @@ exports.initController = (req, res) ->
   res.redirect '/'
 
 exports.list = (req, res) ->
+  pathname = req.param('pathname')
   context =
-    pathname: /// ([^/]*)/?$ ///.exec(req.param('pathname'))[1] # Name of folder
+    pathname: /// ([^/]*)/?$ ///.exec(pathname)[1] # Name of folder
+    checked: isChecked(pathname)
 
-  filesystem.getDirList req.param('pathname'), (err, files) =>
-    context.files = files ? []
+  filesystem.getDirList pathname, (err, files) =>
+    context.files = []
+    if files?
+      for file in files
+        file.checked = isChecked(file.path)
+        context.files.push file
     res.render 'list', context
 
 exports.files = (req, res) ->
@@ -66,6 +76,7 @@ exports.files = (req, res) ->
             file.icon = 'app' 
           else 
             file.icon = 'file'
+          file.checked = isChecked(file.path)
           filelist.push file
     context.files = filelist
     res.render 'files', context

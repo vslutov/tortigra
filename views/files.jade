@@ -10,5 +10,8 @@ ul.files
   for file in files
     li(data-pathname="#{file.path}", data-type="#{file.icon}")
       img(src="/img/#{file.icon}.png")
-      input(type="checkbox", value="#{file.name}")
+      if file.checked
+        input(type="checkbox",checked)
+      else
+        input(type="checkbox")
       .content #{file.name}

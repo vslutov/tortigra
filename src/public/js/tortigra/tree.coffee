@@ -1,6 +1,6 @@
 $(document).ready () =>
   isParent = (parent, pathname) ->
-    pathname.startsWith(parent) and (parent.endsWith('/') or parent is '')
+    pathname.startsWith(parent) and parent.endsWith('/') or parent is ''
 
   updateLeafs = (parent) ->
     $(parent).find('li').each (index, elem) =>

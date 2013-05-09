@@ -1,10 +1,16 @@
 .expand
-input(type="checkbox")
+if checked
+  input(type="checkbox",checked)
+else
+  input(type="checkbox")
 .content #{pathname}
 ul.tree
   for file in files
     li(data-pathname="#{file.path}")
       .expand
-      input(type="checkbox", value="#{file.name}")
+      if file.checked
+        input(type="checkbox",checked)
+      else
+        input(type="checkbox")
       .content #{file.name}
       ul.tree
