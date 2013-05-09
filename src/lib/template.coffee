@@ -1,9 +1,5 @@
 exports.root = (req, res) ->
-  context = 
-    title: 'Home'
-    dirpath: ''
-    dirname: app.get('tortigra source')
-  res.render 'index', context
+  res.render 'index', {title: 'Home'}
 
 exports.init = (req, res) ->
   res.render 'init', {title: 'Init'}

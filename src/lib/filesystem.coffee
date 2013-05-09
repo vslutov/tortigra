@@ -1,27 +1,28 @@
 fs = require('fs')
 
-exports.getDirList = (dirname, callback) ->
-  files = []
-  fs.readdir app.get('tortigra source') + dirname, (err, filelist) =>
+exports.getDirList = (pathname, callback) ->
+  fs.readdir app.locals.source + pathname, (err, filelist) =>
     if err
       callback err, null
     else
+      files = []
       for file in filelist
         try
-          stats = fs.statSync( app.get('tortigra source') + dirname + file )
+          stats = fs.statSync( app.locals.source + pathname + file )
           if stats.isDirectory()
-            files.push dirname + file + '/'
+            files.push
+              path: pathname + file + '/'
+              name: file
       callback null, files
 
-exports.dirArrayToDirs = (files) ->
+exports.fileArrayToFiles = (pathname, files) ->
   for file in files
-    path: file
-    name: /// ([^/]*)/?$ ///.exec(file)[1]
-
-exports.fileArrayToFiles = (dirname, files) ->
-  for file in files
-    path: dirname + file
+    path: pathname + file
     name: file
 
-exports.readdir = fs.readdir
-exports.statSync = fs.statSync
+exports.readdir = (pathname, callback) ->
+  fs.readdir app.locals.source + pathname, (err, result) =>
+    callback err, result
+
+exports.statSync = (pathname) ->
+  fs.statSync app.locals.source + pathname

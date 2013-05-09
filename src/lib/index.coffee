@@ -1,12 +1,12 @@
 express = require('express')
+global.app = express()
+
 ajax = require('./ajax.js')
 template = require('./template.js')
 logic = require('./logic.js')
 
-global.app = express()
-
-app.set 'tortigra source', '/'
-app.set 'tortigra destination', '/dest/'
+app.locals.source = '/'
+app.locals.destination = '/dest/'
 
 app.set 'port', 6600
 app.set 'views', './views'

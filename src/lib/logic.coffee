@@ -1,16 +1,36 @@
 filesystem = require('./filesystem.js')
 require('sugar')
 
-task = []
+app.locals.task = []
+
+isParent = (parent, pathname) ->
+  pathname.startsWith(parent) and (parent.endsWith('/') or parent is '')
+
+remove = (task, pathname, callback) -> # Recursive function
+  parent = task.find (elem) -> isParent(elem, pathname) or elem is pathname
+  if parent isnt pathname
+    task.remove parent
+    filesystem.readdir parent, (err, files) =>
+      for file in files
+        if filesystem.statSync(parent + file).isDirectory()
+          task.push parent + file + '/'
+        else
+          task.push parent + file
+      remove task, pathname, callback
+  else
+    task.remove pathname
+    callback task
 
 exports.add = (req, res) ->
-  pathname = req.param('pathname')
-  if task.count(pathname) is 0 then task.push(pathname)
-  console.log task
+  pathname = req.param('pathname') 
+  app.locals.task.remove (elem) -> isParent(pathname, elem)
+  app.locals.task.push pathname
+  console.log app.locals.task
   res.end 'ok'
 
 exports.remove = (req, res) ->
   pathname = req.param('pathname')
-  if task.count(pathname) isnt 0 then task.remove(pathname)
-  console.log task
-  res.end 'ok'
+  remove app.locals.task, pathname, (apply) =>
+    app.locals.task = apply
+    console.log app.locals.task
+    res.end 'ok'

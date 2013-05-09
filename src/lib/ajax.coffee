@@ -9,26 +9,22 @@ exports.leaf = (req, res) ->
       res.end 'leaf'
 
 exports.initController = (req, res) ->
-  app.set 'tortigra source', req.param('source')
-  app.set 'tortigra destination', req.param('destination')
+  app.locals.source = req.param('source')
+  app.locals.destination = req.param('destination')
   res.redirect '/'
 
 exports.list = (req, res) ->
-  pathname = req.param('pathname')
   context =
-    pathname: /// ([^/]*)/?$ ///.exec(pathname)[1]
-    files: []
-  if context.pathname is '' then context.pathname = app.get('tortigra source')
+    pathname: /// ([^/]*)/?$ ///.exec(req.param('pathname'))[1] # Name of folder
 
-  filesystem.getDirList pathname, (err, files) =>
-    if files?
-      context.files = filesystem.dirArrayToDirs(files)
+  filesystem.getDirList req.param('pathname'), (err, files) =>
+    context.files = files ? []
     res.render 'list', context
 
 exports.files = (req, res) ->
   pathname = req.param('pathname')
   context =
-    root: app.get('tortigra source')
+    root: app.locals.source
     bread: []
 
   reg = /([^\/]+)\//g
@@ -43,12 +39,12 @@ exports.files = (req, res) ->
     else
       break
 
-  filesystem.readdir app.get('tortigra source') + pathname, (err, files) =>
+  filesystem.readdir pathname, (err, files) =>
     filelist = []
     if files?
       for file in filesystem.fileArrayToFiles(pathname, files)
         try
-          if filesystem.statSync( app.get('tortigra source') + file.path ).isDirectory() 
+          if filesystem.statSync( file.path ).isDirectory() 
             file.icon = 'folder'
             file.path += '/'
           else if /// (?:\.) (?: 
