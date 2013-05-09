@@ -1,6 +1,10 @@
 $(document).ready () =>
   isParent = (parent, pathname) ->
-    pathname.startsWith(parent) and parent.endsWith('/') or parent is ''
+    console.log parent, pathname
+    if pathname? and parent?
+      pathname.startsWith(parent) and parent.endsWith('/') or parent is ''
+    else
+      false
 
   updateLeafs = (parent) ->
     $(parent).find('li').each (index, elem) =>
@@ -52,8 +56,7 @@ $(document).ready () =>
       removePath elem.parent().attr('data-pathname')
 
   addPath = (pathname) ->
-    $('li[data-pathname="'+pathname+'"] input[type="checkbox"]').prop 'checked', true
-    console.log $('li[data-pathname="'+pathname+'"] input[type="checkbox"]')
+    $('li').filter(() -> isParent(pathname, $(this).attr('data-pathname')) or pathname is $(this).attr('data-pathname')).children('input[type="checkbox"]').prop 'checked', true
     $.post '/add', {pathname: pathname}
 
   removePath = (pathname) ->
