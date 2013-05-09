@@ -3,7 +3,7 @@ $(document).ready () =>
     $(parent).find('li').each (index, elem) =>
       elem = $(elem)
       elem.toggleClass('loading')
-      $.post '/leaf', {dirname: elem.attr('data-pathname')}, (data) =>
+      $.post '/leaf', {pathname: elem.attr('data-pathname')}, (data) =>
         elem.toggleClass('loading')
         if data is 'leaf' then elem.addClass 'leaf' 
 
@@ -20,7 +20,7 @@ $(document).ready () =>
     node.addClass 'active'
     if not node.hasClass('opened')
       toggleNode node
-    content.load '/files', {dirname: pathname}, () =>
+    content.load '/files', {pathname: pathname}, () =>
       content.find('.content').bind 'click', (e) =>
         elem = $(e.currentTarget).parent()
         if elem.attr('data-type') is 'folder'
@@ -32,7 +32,7 @@ $(document).ready () =>
     parent.toggleClass 'opened'
     if parent.hasClass('opened') and not parent.hasClass('loaded')
       parent.toggleClass 'loading'
-      parent.load '/list', {dirname: parent.attr('data-pathname')}, () =>
+      parent.load '/list', {pathname: parent.attr('data-pathname')}, () =>
         parent.toggleClass 'loading'
         parent.addClass 'loaded'
         parent.find('.expand').bind 'click', expandClick

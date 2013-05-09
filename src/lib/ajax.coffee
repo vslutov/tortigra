@@ -1,7 +1,7 @@
 filesystem = require('./filesystem.js')
 
 exports.leaf = (req, res) ->
-  filesystem.getDirList req.param('dirname'), (err, files) =>
+  filesystem.getDirList req.param('pathname'), (err, files) =>
     res.set 'Content-Type', 'text/plain'
     if not err and files.length > 0
       res.end 'node'
@@ -14,19 +14,19 @@ exports.initController = (req, res) ->
   res.redirect '/'
 
 exports.list = (req, res) ->
-  dirname = req.param('dirname')
+  pathname = req.param('pathname')
   context =
-    dirname: /// ([^/]*)/?$ ///.exec(dirname)[1]
+    pathname: /// ([^/]*)/?$ ///.exec(pathname)[1]
     files: []
-  if context.dirname is '' then context.dirname = app.get('tortigra source')
+  if context.pathname is '' then context.pathname = app.get('tortigra source')
 
-  filesystem.getDirList dirname, (err, files) =>
+  filesystem.getDirList pathname, (err, files) =>
     if files?
       context.files = filesystem.dirArrayToDirs(files)
     res.render 'list', context
 
 exports.files = (req, res) ->
-  dirname = req.param('dirname')
+  pathname = req.param('pathname')
   context =
     root: app.get('tortigra source')
     bread: []
@@ -34,7 +34,7 @@ exports.files = (req, res) ->
   reg = /([^\/]+)\//g
   dirpath = ''
   loop
-    a = reg.exec(dirname)
+    a = reg.exec(pathname)
     if a?
       dirpath += a[1] + '/'
       context.bread.push
@@ -43,10 +43,10 @@ exports.files = (req, res) ->
     else
       break
 
-  filesystem.readdir app.get('tortigra source') + dirname, (err, files) =>
+  filesystem.readdir app.get('tortigra source') + pathname, (err, files) =>
     filelist = []
     if files?
-      for file in filesystem.fileArrayToFiles(dirname, files)
+      for file in filesystem.fileArrayToFiles(pathname, files)
         try
           if filesystem.statSync( app.get('tortigra source') + file.path ).isDirectory() 
             file.icon = 'folder'
