@@ -1,8 +1,47 @@
 extends base
 
 block content
-  h2
-    | Help
+  h2 Help
+
+  hr
+  h3 Quick start
+  ol
+    li 
+      a(href='#install') Install a modern browser
+    li
+      a(href='#configure') Configure tortigra
+    li
+      a(href='#select') Select files to copy
+    li
+      a(href='#wait') Wait a minute
+
+  a(name='install')
+  hr
+  h4 Install a modern browser
+  .alert If you sure that you have latest version of your favorite browser, you may 
+    a(href='#configure') skip this step.
+  p First of all, you should install full featured browser. 
+    | Go to 
+    a(href='http://whatbrowser.org/') http://whatbrowser.org/ 
+    | and do it!
+  p Seriously, you must do it for comfortable work and computer safety.
+
+
+  a(name='configure')
+  hr
+  h4 Configure tortigra
+
+  a(name='select')
+  hr
+  h4 Select files to copy
+
+  a(name='browser')
+  hr
+  h4 Wait a minute
+  
+  hr
+  h3 For developers
+  p Use this documentation:
   ul
     li
       a(href='http://htmlbook.ru/html') htmlbook

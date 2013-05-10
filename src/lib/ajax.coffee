@@ -12,11 +12,6 @@ exports.leaf = (req, res) ->
     else
       res.end 'leaf'
 
-exports.initController = (req, res) ->
-  app.locals.source = req.param('source')
-  app.locals.destination = req.param('destination')
-  res.redirect '/'
-
 exports.list = (req, res) ->
   pathname = req.param('pathname')
   context =
@@ -73,7 +68,13 @@ exports.files = (req, res) ->
             exe | bat | sh |
             py | php | perl
            ) $ ///.test(file.path) 
-            file.icon = 'app' 
+            file.icon = 'app'
+          else if /// (?:\.) (?: 
+            mp3 | wav | mpeg |
+            ogg | flac | wma |
+            webm
+           ) $ ///.test(file.path) 
+            file.icon = 'audio' 
           else 
             file.icon = 'file'
           file.checked = isChecked(file.path)
