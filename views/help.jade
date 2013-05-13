@@ -34,11 +34,30 @@ block content
     li.thumbnail.span4
       img(src='/img/lesson-2a.png')
       | Click on button 
-      mark install
+      code Init
       |  on the header.
     li.thumbnail.span4
       img(src='/img/lesson-2b.png')
       | Type folder FROM and TO copy.
+  h5 Tips & tricks
+  ul
+    li Use only forward slash 
+      code /
+      | , not backslash 
+      code \
+      | .
+    li Sure, that you finish dirname with slash. For example: 
+      code C:/Games
+        mark /
+    li In MS Windows you should start with disk name: 
+      code 
+        mark C:/
+        | Games/
+      | .
+    li You may use 
+      code ./
+      |  for select directory with tortigra main files.
+      | It may be usefull, when you run current program from USB-drive.
 
   hr
   a(name='select', href='#select')

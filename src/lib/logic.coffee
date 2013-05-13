@@ -36,10 +36,8 @@ exports.remove = (req, res) ->
     console.log app.locals.task
     res.end 'ok'
 
-app.locals.source = '/source/'
-app.locals.destination = '/destination/'
-
 exports.initController = (req, res) ->
   app.locals.source = req.param('source')
   app.locals.destination = req.param('destination')
+  app.locals.started = true
   res.redirect '/'
