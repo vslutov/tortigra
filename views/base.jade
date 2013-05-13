@@ -13,18 +13,20 @@ html(lang='ru')
       .navbar
         .navbar-inner
           a(href="/").brand Tortigra
-          ul.nav
-            if started
-              li#Home
-                a(href="/") Home
-            li#Help
-              a(href="/help") Help
-            if !started
-              li#Init
-                a(href="/init") Init
-            else
-              li#Finish
-                a(href="/finish") Finish
+          if stage != 'wait'
+            ul.nav
+              if stage == 'started'
+                li#Home
+                  a(href="/") Home
+              li#Help
+                a(href="/help") Help
+              if stage == 'started'
+                li#Finish
+                  a(href="/finish") Finish
+              else
+                li#Init
+                  a(href="/init") Init
+                
     .row-fluid
       aside.span3
         block sidebar

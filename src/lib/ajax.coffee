@@ -2,7 +2,7 @@ filesystem = require('./filesystem.js')
 require('sugar')
 
 isChecked = (pathname) ->
-  app.locals.task.some (elem) -> pathname.startsWith(elem) and elem.endsWith('/') or elem is '' or elem is pathname
+  app.locals.task.some (elem) -> pathname.startsWith(elem) and filesystem.isFolder(elem) or elem is pathname
 
 exports.leaf = (req, res) ->
   filesystem.getDirList req.param('pathname'), (err, files) =>
@@ -49,9 +49,8 @@ exports.files = (req, res) ->
     if files?
       for file in filesystem.fileArrayToFiles(pathname, files)
         try
-          if filesystem.statSync( file.path ).isDirectory() 
+          if filesystem.isFolder( file.path )
             file.icon = 'folder'
-            file.path += '/'
           else if /// (?:\.) (?: 
             jpe?g | png | gif | 
             bmp | tiff | raw | 

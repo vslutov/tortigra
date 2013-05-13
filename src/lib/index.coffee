@@ -25,6 +25,7 @@ logic = require('./logic.js')
 app.post '/add', logic.add
 app.post '/remove', logic.remove
 app.post '/init-controller', logic.initController 
+app.post '/finish-controller', logic.finishController 
 
 app.listen app.get('port')
 console.log 'Now going to http:/localhost:' + app.get('port') + '/'

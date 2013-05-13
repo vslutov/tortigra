@@ -1,8 +1,12 @@
 exports.root = (req, res) ->
-  if app.locals.started
-    res.render 'index', {title: 'Home'}
-  else
+  if app.locals.stage is 'not started'
     exports.help(req, res)
+  else if app.locals.stage is 'started'
+    res.render 'index', {title: 'Home'}
+  else if app.locals.stage is 'wait'
+    res.render 'wait', {title: 'Wait'}
+  else #Completed
+    res.render 'completed', {title: 'Completed'}
 
 exports.init = (req, res) ->
   res.render 'init', {title: 'Init'}

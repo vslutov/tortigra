@@ -15,14 +15,29 @@ exports.getDirList = (pathname, callback) ->
               name: file
       callback null, files
 
+toDirMaybe = (pathname) ->
+  if fs.statSync(app.locals.source + pathname).isDirectory()
+    pathname + '/'
+  else
+    pathname
+
 exports.fileArrayToFiles = (pathname, files) ->
   for file in files
-    path: pathname + file
-    name: file
+    try
+      path: toDirMaybe(pathname + file)
+      name: file
 
-exports.readdir = (pathname, callback) ->
-  fs.readdir app.locals.source + pathname, (err, result) =>
+exports.readFolder = (pathname, callback) ->
+  fs.readdir app.locals.source + pathname, (err, files) =>
+    result = []
+    if files?
+      for file in files
+        result.push toDirMaybe(pathname + file)
     callback err, result
 
-exports.statSync = (pathname) ->
-  fs.statSync app.locals.source + pathname
+exports.readdir = (pathname, callback) ->
+  fs.readdir app.locals.source + pathname, (err, files) =>
+    callback err, files
+
+exports.isFolder = (pathname) ->
+  pathname.endsWith('/') or pathname is ''
