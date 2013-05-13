@@ -4,7 +4,7 @@ exports.root = (req, res) ->
   else if app.locals.stage is 'started'
     res.render 'index', {title: 'Home'}
   else if app.locals.stage is 'wait'
-    res.render 'wait', {title: 'Wait'}
+    res.render 'wait', {title: 'Wait', done:app.locals.alreadyDone}
   else #Completed
     res.render 'completed', {title: 'Completed'}
 

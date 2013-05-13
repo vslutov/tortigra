@@ -13,7 +13,7 @@ html(lang='ru')
       .navbar
         .navbar-inner
           a(href="/").brand Tortigra
-          if stage != 'wait'
+          if stage != 'wait' && stage != 'completed'
             ul.nav
               if stage == 'started'
                 li#Home

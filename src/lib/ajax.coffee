@@ -2,7 +2,7 @@ filesystem = require('./filesystem.js')
 require('sugar')
 
 isChecked = (pathname) ->
-  app.locals.task.some (elem) -> pathname.startsWith(elem) and filesystem.isFolder(elem) or elem is pathname
+  app.locals.task.some (elem) -> filesystem.isParent(elem, pathname) or elem is pathname
 
 exports.leaf = (req, res) ->
   filesystem.getDirList req.param('pathname'), (err, files) =>

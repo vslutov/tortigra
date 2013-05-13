@@ -5,10 +5,8 @@ app.set 'port', 6600
 app.set 'views', './views'
 app.set 'view engine', 'jade'
 
-app.use express.logger('dev')
 app.use express.static('./public')
 app.use express.bodyParser()
-
 
 template = require('./template.js')
 app.get '/', template.root
@@ -27,5 +25,6 @@ app.post '/remove', logic.remove
 app.post '/init-controller', logic.initController 
 app.post '/finish-controller', logic.finishController 
 
-app.listen app.get('port')
+global.server = app.listen(app.get('port'))
 console.log 'Now going to http:/localhost:' + app.get('port') + '/'
+console.log 'Press Ctrl+C in this window, when work will be finished.'
