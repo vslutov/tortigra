@@ -15,49 +15,79 @@ block content
     li
       a(href='#wait') Wait a minute
 
-  a(name='install')
+  
   hr
-  h4 Install a modern browser
+  a(name='install', href='#install')
+    h4 Install a modern browser
   .alert If you sure that you have latest version of your favorite browser, you may 
     a(href='#configure') skip this step.
   p First of all, you should install full featured browser. 
     | Go to 
-    a(href='http://whatbrowser.org/') http://whatbrowser.org/ 
+    a(target="_blank", href='http://whatbrowser.org/') http://whatbrowser.org/ 
     | and do it!
   p Seriously, you must do it for comfortable work and computer safety.
-
-
-  a(name='configure')
+  
   hr
-  h4 Configure tortigra
+  a(name='configure', href='#configure')
+    h4 Configure tortigra
+  ul.thumbnails
+    li.thumbnail.span4
+      img(src='/img/lesson-2a.png')
+      | Click on button 
+      mark install
+      |  on the header.
+    li.thumbnail.span4
+      img(src='/img/lesson-2b.png')
+      | Type folder FROM and TO copy.
 
-  a(name='select')
   hr
-  h4 Select files to copy
+  a(name='select', href='#select')
+    h4 Select files to copy
+  ul.thumbnails
+    li.thumbnail.span4
+      img(src='/img/lesson-3a.png')
+      | You can select directories to copy in folder tree.
+    li.thumbnail.span4
+      img(src='/img/lesson-3b.png')
+      | Or you may select files (or dirs) in file list.
 
-  a(name='browser')
   hr
-  h4 Wait a minute
+  a(name='wait', href='#wait')
+    h4 Wait a minute
   
   hr
   h3 For developers
   p Use this documentation:
   ul
     li
-      a(href='http://htmlbook.ru/html') htmlbook
+      a(target="_blank", href='http://htmlbook.ru/html') htmlbook
     li
-      a(href='http://nodejs.org/api/') nodejs
+      a(target="_blank", href='http://nodejs.org/api/') nodejs
     li
-      a(href='http://coffeescript.org/') coffeescript
+      a(target="_blank", href='http://coffeescript.org/') coffeescript
     li
-      a(href="http://sugarjs.com/features") sugar
+      a(target="_blank", href="http://sugarjs.com/features") sugar
     li
-      a(href='http://lesscss.org/') less
+      a(target="_blank", href='http://lesscss.org/') less
     li
-      a(href='http://expressjs.com/api.html') express
+      a(target="_blank", href='http://expressjs.com/api.html') express
     li
-      a(href='https://github.com/visionmedia/jade') jade
+      a(target="_blank", href='https://github.com/visionmedia/jade') jade
     li
-      a(href='http://twitter.github.io/bootstrap/index.html') bootstrap
+      a(target="_blank", href='http://twitter.github.io/bootstrap/index.html') bootstrap
     li
-      a(href='http://api.jquery.com/') jquery
+      a(target="_blank", href='http://api.jquery.com/') jquery
+
+  hr
+  h3 For EVA
+  ol
+    li Постановка задачи
+    li Используемые модели и алгоритмы
+    li Руководство программиста
+      ul
+        li Основные структуры данных
+        li Основные функции - 
+          mark заголовок(значения)
+          |  что делает
+    li Руководство пользователя
+    li Ссылки и литература

@@ -1,5 +1,9 @@
 exports.root = (req, res) ->
-  res.render 'index', {title: 'Home'}
+  if app.locals.started
+    res.render 'index', {title: 'Home'}
+  else
+    console.log 'Hm...'
+    exports.help(req, res)
 
 exports.init = (req, res) ->
   res.render 'init', {title: 'Init'}

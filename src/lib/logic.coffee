@@ -2,6 +2,7 @@ filesystem = require('./filesystem.js')
 require('sugar')
 
 app.locals.task = []
+app.locals.started = false
 
 isParent = (parent, pathname) ->
   pathname.startsWith(parent) and parent.endsWith('/') or parent is ''
