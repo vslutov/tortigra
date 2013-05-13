@@ -14,6 +14,7 @@ template = require('./template.js')
 app.get '/', template.root
 app.get '/init', template.init
 app.get '/help', template.help
+app.get '/finish', template.finish
 
 ajax = require('./ajax.js')
 app.post '/leaf', ajax.leaf
