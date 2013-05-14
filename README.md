@@ -1,9 +1,7 @@
 # Tortigra #
 
-easy-copy helper
-
 ## License ##
-Tortigra, easy copy-helper
+Tortigra, simple copy assistant
 
 Copyright (C) 2013 V. S. Lutov
 
