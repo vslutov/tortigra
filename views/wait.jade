@@ -4,3 +4,8 @@ block content
   h2 Wait a minute
   code #{done}/#{tasksize}
   |  files has been copied.
+  :coffeescript
+    $(document).ready () =>
+      f = () ->
+        window.location.replace "/"
+      setTimeout f, 1000
