@@ -4,7 +4,7 @@ exports.root = (req, res) ->
   else if app.locals.stage is 'started'
     res.render 'index', {title: 'Home'}
   else if app.locals.stage is 'wait'
-    res.render 'wait', {title: 'Wait', done:app.locals.alreadyDone}
+    res.render 'wait', {title: 'Wait', done:app.locals.alreadyDone, tasksize: app.locals.task.length}
   else #Completed
     res.render 'completed', {title: 'Completed'}
 
@@ -16,3 +16,6 @@ exports.help = (req, res) ->
 
 exports.finish = (req, res) ->
   res.render 'finish', {title: 'Finish'}
+
+exports.license = (req, res) ->
+  res.render 'license', {title: 'License'}

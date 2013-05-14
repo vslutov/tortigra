@@ -13,8 +13,8 @@ html(lang='ru')
       .navbar
         .navbar-inner
           a(href="/").brand Tortigra
-          if stage != 'wait' && stage != 'completed'
-            ul.nav
+          ul.nav
+            if stage != 'wait'
               if stage == 'started'
                 li#Home
                   a(href="/") Home
@@ -26,14 +26,32 @@ html(lang='ru')
               else
                 li#Init
                   a(href="/init") Init
+              li.divider-vertical
+
+            li#License
+              a(href='/license') License
+
                 
     .row-fluid
       aside.span3
         block sidebar
+          h2 Tips and tricks
+          ul
+            li You can copy tortigra files to USB-drive and run it from other computer.
+              |  (Don't forget copy  
+              code node
+              |  executables)
+            li To install tortigra to another computer, go to github page: 
+              a(href='https://github.com/vslutov/tortigra') https://github.com/vslutov/tortigra
+              |  and follow instructions.
+            li Update your version of tortigra as often as you can, it's easy: 
+              code git pull
+              |  in the repositary folder.
       #content.span9.hero-unit
         block content
     footer
-      | Change your life for the better 
+      | Change your life for the better | 
+      a(href='/license') Copyright (C) 2013 V. S. Lutov
     
     :coffeescript
       $(document).ready () =>

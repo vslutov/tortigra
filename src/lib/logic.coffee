@@ -9,8 +9,7 @@ remove = (task, pathname, callback) -> # Recursive function
   if parent isnt pathname
     task.remove parent
     filesystem.readFolder parent, (err, files) =>
-      for file in files
-        task.push file
+      task.add files
       remove task, pathname, callback
   else
     task.remove pathname
@@ -26,10 +25,10 @@ doWork = () ->
         if files?
           app.locals.task.add files
         filesystem.copyFolder elem, () =>
-          nextTick doWork
+          doWork()
     else
       filesystem.copyFile elem, () =>
-        nextTick doWork
+        doWork()
   else
     app.locals.stage = 'finished'
 
@@ -54,5 +53,5 @@ exports.initController = (req, res) ->
 
 exports.finishController = (req, res) ->
   app.locals.stage = 'wait'
-  nextTick doWork
+  doWork
   res.redirect '/'
