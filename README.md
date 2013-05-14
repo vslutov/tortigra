@@ -1,4 +1,6 @@
 # Tortigra #
+[Official site](https://github.com/vslutov/tortigra)
+
 
 ## License ##
 Tortigra, simple copy assistant
@@ -11,21 +13,29 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/
 
-## Install guide ##
-1. Install [nodejs][1]
+
+## Installation guide ##
+
+1. Install [nodejs](http://nodejs.org/)
 2. Clone repository
 3. Run `npm install` from folder with code
 4. Run `node start.js`
 
+
 ## Why Tortigra? ##
+
 Tortigra - is simple way to copy files with folder hierarchy to portable device.
 
+
 ## Models and Algorithms ##
-1. [Event-driven programming][2]
-2. [Express framework][3]
-3. [Folder tree][4]
+
+1. [Event-driven programming](http://en.wikipedia.org/wiki/Event-driven_programming)
+2. [Express framework](http://expressjs.com/)
+3. [Folder tree](http://en.wikipedia.org/wiki/Tree_structure)
+
 
 ### Event-driven programming ###
+
 Flow of the program is determined by events (user actions and filesystem state)
 
 In this code we will add files to task after reading folder (long operation):
@@ -37,6 +47,7 @@ In this code we will add files to task after reading folder (long operation):
         remove task, pathname, callback
 
 ### Express framework ###
+
 Web application framework for node allow to build simple program, for example:
 
     express = require('express')
@@ -52,15 +63,18 @@ Web application framework for node allow to build simple program, for example:
     app.listen(app.get('port'))
 
 ### Folder tree ###
+
 It's array containing current task (files and folders to copy). Special rules allow successfully use this data structure:
 
 1. Filename never ends with `/`
 2. Dirname always ends with `/`
 3. If there is folder, there is no its children.
 
+
 ## For developer ##
 
 ### Overview ###
+
 `./src/lib/` contain main files.
 
 - `ajax.coffee` - on the air information view (like folder tree and file list)
@@ -81,10 +95,12 @@ Task is preserve by array `global.app.locals.task`
 - `logic.coffee#doWork()` - start real copy
 
 ### TODO ###
+
 - Add socket.io library
 - Add normal select start folder interface
 - Add on the air copy
 - Add complete dialog
+
 
 ## References ##
 
@@ -96,9 +112,3 @@ Task is preserve by array `global.app.locals.task`
 + [LESS << The Dynamic Stylesheet language](http://lesscss.org/)
 + [node.js](http://nodejs.org/)
 + [Sugar: A Javascript library for working with native objects.](http://sugarjs.com/)
-
-
-[1]: http://nodejs.org/ 'site:nodejs'
-[2]: http://en.wikipedia.org/wiki/Event-driven_programming 'wiki:Event-driven programming'
-[3]: http://expressjs.com/ 'site:Express framework'
-[4]: http://en.wikipedia.org/wiki/Tree_structure 'wiki:Tree structure'
