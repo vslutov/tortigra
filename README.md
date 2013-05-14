@@ -67,16 +67,16 @@ It's array containing current task (files and folders to copy). Special rules al
 - `logic.coffee` - some server-side logic (like initController and doWork)
 - `template.coffe` - visible part of interface (like help and license)
 
-Task is preserve by `array global.app.locals.task`
+Task is preserve by array `global.app.locals.task`
 
 ### Main function ###
 
-- ajax.list(req, res) - respond to client node in folder tree
-- ahax.files(req, res) - respond to client files view
-- filesystem.readFolder( pathname, callback(fileArray) ) - read dir and return good pathname `parent/file.ext` or `parent/folder/`
-- filesystem.copyFile(pathname, callback) and filesystem.copyFolder(pathname, callback) - obviously
-- logic.coffee#remove - reqoursive remove parents of element from task and add this children
-- logic.coffee#doWork - main work
+- `ajax.list(req, res)` - respond to client node in folder tree
+- `ajax.files(req, res)` - respond to client files view
+- `filesystem.readFolder( pathname, callback(fileArray) )` - read dir and return good pathname `parent/file.ext` or `parent/folder/`
+- `filesystem.copyFile(pathname, callback)` and `filesystem.copyFolder(pathname, callback)` - obviously
+- `logic.coffee#remove(task, pathname, callback)` - reqoursive remove parents of element from task and add this children
+- `logic.coffee#doWork()` - start real copy
 
 ### TODO ###
 - Add socket.io library
