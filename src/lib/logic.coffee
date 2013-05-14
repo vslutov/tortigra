@@ -53,5 +53,5 @@ exports.initController = (req, res) ->
 
 exports.finishController = (req, res) ->
   app.locals.stage = 'wait'
-  doWork
+  doWork()
   res.redirect '/'

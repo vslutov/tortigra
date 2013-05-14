@@ -3,7 +3,8 @@
 easy-copy helper
 
 ## License ##
-Tortigra, easy copy-helper 
+Tortigra, easy copy-helper
+
 Copyright (C) 2013 V. S. Lutov
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -17,6 +18,11 @@ You should have received a copy of the GNU General Public License along with thi
 2. Clone repository
 3. Run `npm install` from folder with code
 4. Run `node start.js`
+
+## Why Tortigra? ##
+Tortigra - is simple way to copy files with folder hierarchy to portable device.
+
+## 
 
 ## TODO ##
 - Add socket.io library
