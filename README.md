@@ -58,13 +58,34 @@ It's array containing current task (files and folders to copy). Special rules al
 2. Dirname always ends with `/`
 3. If there is folder, there is no its children.
 
+## For developer ##
+
+### Overview ###
+`./src/lib/` contain main files.
+
+- `ajax.coffee` - on the air information view (like folder tree and file list)
+- `filesystem.coffee` - low-level function (like readFolder and copyFile)
+- `index.coffee` - connector
+- `logic.coffee` - some server-side logic (like initController and doWork)
+- `template.coffe` - visible part of interface (like help and license)
+
+Task is preserve by `array global.app.locals.task`
+
+### Main function ###
+
+- ajax.list(req, res) - respond to client node in folder tree
+- ahax.files(req, res) - respond to client files view
+- filesystem.readFolder( pathname, callback(fileArray) ) - read dir and return good pathname `parent/file.ext` or `parent/folder/`
+- filesystem.copyFile(pathname, callback) and filesystem.copyFolder(pathname, callback) - obviously
+- logic.coffee#remove - reqoursive remove parents of element from task and add this children
+- logic.coffee#doWork - main work
+
 ## TODO ##
 - Add socket.io library
 - Add normal select start folder interface
 - Add on the air copy
 - Add complete dialog
 
-## References ##
 [1]: http://nodejs.org/ 'site:nodejs'
 [2]: http://en.wikipedia.org/wiki/Event-driven_programming 'wiki:Event-driven programming'
 [3]: http://expressjs.com/ 'site:Express framework'
