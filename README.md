@@ -80,11 +80,23 @@ Task is preserve by `array global.app.locals.task`
 - logic.coffee#remove - reqoursive remove parents of element from task and add this children
 - logic.coffee#doWork - main work
 
-## TODO ##
+### TODO ###
 - Add socket.io library
 - Add normal select start folder interface
 - Add on the air copy
 - Add complete dialog
+
+## References ##
+
++ [Bootstrap](http://twitter.github.io/bootstrap/index.html)
++ [CoffeeScript](http://coffeescript.org/)
++ [Express - node.js web application framework](http://expressjs.com/)
++ [Jade - template engine](https://github.com/visionmedia/jade)
++ [jQuery](http://jquery.com/)
++ [LESS << The Dynamic Stylesheet language](http://lesscss.org/)
++ [node.js](http://nodejs.org/)
++ [Sugar: A Javascript library for working with native objects.](http://sugarjs.com/)
+
 
 [1]: http://nodejs.org/ 'site:nodejs'
 [2]: http://en.wikipedia.org/wiki/Event-driven_programming 'wiki:Event-driven programming'
