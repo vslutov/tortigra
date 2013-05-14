@@ -29,6 +29,7 @@ Tortigra - is simple way to copy files with folder hierarchy to portable device.
 Flow of the program is determined by events (user actions and filesystem state)
 
 In this code we will add files to task after reading folder (long operation):
+
     if parent isnt pathname
       task.remove parent
       filesystem.readFolder parent, (err, files) =>
@@ -37,6 +38,7 @@ In this code we will add files to task after reading folder (long operation):
 
 ### Express framework ###
 Web application framework for node allow to build simple program, for example:
+
     express = require('express')
     global.app = express()
 
@@ -69,7 +71,7 @@ It's array containing current task (files and folders to copy). Special rules al
 
 Task is preserve by array `global.app.locals.task`
 
-### Main function ###
+### Main functions ###
 
 - `ajax.list(req, res)` - respond to client node in folder tree
 - `ajax.files(req, res)` - respond to client files view
