@@ -14,7 +14,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/
 
 ## Install guide ##
-1. Install [nodejs](http://nodejs.org/)
+1. Install [nodejs][1]
 2. Clone repository
 3. Run `npm install` from folder with code
 4. Run `node start.js`
@@ -22,10 +22,50 @@ You should have received a copy of the GNU General Public License along with thi
 ## Why Tortigra? ##
 Tortigra - is simple way to copy files with folder hierarchy to portable device.
 
-## 
+## Models and Algorithms ##
+1. [Event-driven programming][2]
+2. [Express framework][3]
+3. [Folder tree][4]
+
+### Event-driven programming ###
+Flow of the program is determined by events (user actions and filesystem state)
+
+In this code we will add files to task after reading folder (long operation):
+    if parent isnt pathname
+      task.remove parent
+      filesystem.readFolder parent, (err, files) =>
+        task.add files
+        remove task, pathname, callback
+
+### Express framework ###
+Web application framework for node allow to build simple program, for example:
+    express = require('express')
+    global.app = express()
+
+    app.set 'port', 6600
+    app.set 'views', './views'
+    app.set 'view engine', 'jade'
+
+    app.get '/init', (req, res) ->
+      res.render 'init', {title: 'Init'}
+
+    app.listen(app.get('port'))
+
+### Folder tree ###
+It's array containing current task (files and folders to copy). Special rules allow successfully use this data structure:
+
+1. Filename never ends with `/`
+2. Dirname always ends with `/`
+3. If there is folder, there is no its children.
 
 ## TODO ##
 - Add socket.io library
 - Add normal select start folder interface
 - Add on the air copy
 - Add complete dialog
+
+## References ##
+[1]: http://nodejs.org/ 'site:nodejs'
+[2]: http://en.wikipedia.org/wiki/Event-driven_programming 'wiki:Event-driven programming'
+[3]: http://expressjs.com/ 'site:Express framework'
+[4]: http://en.wikipedia.org/wiki/Tree_structure 'wiki:Tree structure'

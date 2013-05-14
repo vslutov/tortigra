@@ -26,6 +26,6 @@ app.post '/remove', logic.remove
 app.post '/init-controller', logic.initController 
 app.post '/finish-controller', logic.finishController 
 
-global.server = app.listen(app.get('port'))
+app.listen(app.get('port'))
 console.log 'Now going to http:/localhost:' + app.get('port') + '/'
 console.log 'Press Ctrl+C in this window, when work will be finished.'
