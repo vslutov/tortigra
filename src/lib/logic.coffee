@@ -15,7 +15,6 @@ remove = (task, pathname, callback) -> # Recursive function
     task.remove pathname
     callback task
 
-app.locals.alreadyDone = 0
 doWork = () ->
   if app.locals.task.length isnt app.locals.alreadyDone
     elem = app.locals.task[app.locals.alreadyDone]
@@ -49,6 +48,7 @@ exports.initController = (req, res) ->
   app.locals.destination = req.param('destination')
   app.locals.task = []
   app.locals.stage = 'started'
+  app.locals.alreadyDone = 0
   res.redirect '/'
 
 exports.finishController = (req, res) ->
