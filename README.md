@@ -100,6 +100,8 @@ Task is preserve by array `global.app.locals.task`
 - Add normal select start folder interface
 - Add on the air copy
 - Add complete dialog
+- Split file and folder array
+- Add logo
 
 
 ## References ##
