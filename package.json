@@ -10,6 +10,7 @@
     "sugar" : "1.3.x",
     "coffee-script" : "1.6.x",
     "jade" : "0.28.x",
-    "less" : "1.4.x"
+    "less" : "1.4.x",
+    "socket.io" : "0.9.x"
   }
 }
