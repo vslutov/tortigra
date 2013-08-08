@@ -19,7 +19,7 @@ You should have received a copy of the GNU General Public License along with thi
 1. Install [nodejs](http://nodejs.org/)
 2. Clone repository
 3. Run `npm install` from folder with code
-4. Run `node start.js`
+4. Run `cake build:all`
 
 
 ## Why Tortigra? ##
