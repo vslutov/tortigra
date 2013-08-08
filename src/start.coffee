@@ -37,4 +37,3 @@ dfs (filelist) =>
       spawn('node', ['node_modules/coffee-script/bin/coffee', '-co', './' + ex[1], file]).on 'exit', maybe
   ++count
   maybe() 
-

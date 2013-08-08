@@ -80,4 +80,3 @@ exports.files = (req, res) ->
           filelist.push file
     context.files = filelist
     res.render 'files', context
-
