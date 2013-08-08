@@ -2,7 +2,7 @@ fs = require('fs')
 spawn = require('child_process').spawn
 require('sugar')
 
-dfs = (callback) ->
+dfs = (path) ->
   result = []
   count = 0
 
@@ -22,9 +22,47 @@ dfs = (callback) ->
       else
         throw e
 
-  temp('.')
+  temp(path)
   temp(result[count]) while count < result.length
   
-  callback(result)
+  return result
 
-dfs(console.log)
+run = (exe, args, callback) ->
+  proc = spawn(exe, args)
+  proc.stderr.on 'data', (buffer) -> console.log buffer.toString()
+  proc.on        'exit', (status) ->
+    process.exit(1) if status != 0
+    cb() if typeof cb is 'function'
+
+less =
+  test : (filename) -> /// ^./src/(.*)\.less$ ///.exec(filename)
+  run : (ex, callback) ->
+          run 'node', 
+              ['node_modules/less/bin/lessc', ex[0], './' + ex[1] + '.css'], 
+              callback
+
+coffee = 
+  test : (filename) -> /// ^./src/(.*?)([^/]+)\.coffee$ ///.exec(filename)
+  run : (ex, callback) -> spawn('node', ['node_modules/coffee-script/bin/coffee'], 
+                                '-co', './' + ex[1], ex[0]).on 'exit', callback
+
+
+build = (actions, files, callback) ->
+  count = 0
+  complete = () ->
+    --count
+    if count is 0
+      callback()
+
+  for file in files
+    for action in actions
+      ex = action.test(file)
+      if ex?
+        ++count
+        action.run(ex, complete)
+      
+
+task 'build:less', 'Build less files into css', (options) ->
+  files = dfs('.')
+  build [less], files, () ->
+    console.log 'All good!'
