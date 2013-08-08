@@ -7,11 +7,17 @@ Tortigra, simple copy assistant
 
 Copyright (C) 2013 V. S. Lutov
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+This program is free software: you can redistribute it and/or modify it under 
+the terms of the GNU General Public License as published by the Free Software 
+Foundation, either version 3 of the License, or (at your option) any later 
+version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY 
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A 
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/
+You should have received a copy of the GNU General Public License along with 
+this program. If not, see http://www.gnu.org/licenses/
 
 
 ## Installation guide ##
@@ -64,7 +70,8 @@ Web application framework for node allow to build simple program, for example:
 
 ### Folder tree ###
 
-It's array containing current task (files and folders to copy). Special rules allow successfully use this data structure:
+It's array containing current task (files and folders to copy). Special rules 
+allow successfully use this data structure:
 
 1. Filename never ends with `/`
 2. Dirname always ends with `/`
@@ -89,9 +96,12 @@ Task is preserve by array `global.app.locals.task`
 
 - `ajax.list(req, res)` - respond to client node in folder tree
 - `ajax.files(req, res)` - respond to client files view
-- `filesystem.readFolder( pathname, callback(fileArray) )` - read dir and return good pathname `parent/file.ext` or `parent/folder/`
-- `filesystem.copyFile(pathname, callback)` and `filesystem.copyFolder(pathname, callback)` - obviously
-- `logic.coffee#remove(task, pathname, callback)` - reqoursive remove parents of element from task and add this children
+- `filesystem.readFolder( pathname, callback(fileArray) )` - read dir and 
+  return good pathname `parent/file.ext` or `parent/folder/`
+- `filesystem.copyFile(pathname, callback)` and 
+  `filesystem.copyFolder(pathname, callback)` - obviously
+- `logic.coffee#remove(task, pathname, callback)` - reqoursive remove parents 
+   of element from task and add this children
 - `logic.coffee#doWork()` - start real copy
 
 ### TODO ###
