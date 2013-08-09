@@ -36,6 +36,27 @@ run = (exe, args, callback) ->
     callback() if typeof callback is 'function'
 
 
+copyFile = (filepath, destination) ->
+  fs.mkdir source + pathname, () =>
+    cbCalled = false
+    done = (err) ->
+      if not cbCalled
+        callback err
+        cbCalled = true
+    
+    rd = fs.createReadStream(app.locals.source + pathname)
+    rd.on 'error', (err) =>
+      done err
+    rd.on 'end', (err) =>
+      done()
+
+    wr = fs.createWriteStream(app.locals.destination + pathname)
+    wr.on 'error', (err) =>
+      done err
+
+    rd.pipe wr
+
+
 less =
   test : (filename) -> /// ^./src/(.*)\.less$ ///.exec(filename)
   run : (ex, callback) ->
@@ -50,6 +71,13 @@ coffee =
           run 'node', 
               ['node_modules/coffee-script/bin/coffee', '-co', './' + ex[1], ex[0]],
               callback
+
+
+css = 
+  test : (filename) -> /// ^./src/(.*)\.css$ ///.exec(filename)
+  run : (ex, callback) ->
+
+
 
 
 build = (actions, files, callback) ->
