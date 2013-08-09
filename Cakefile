@@ -27,12 +27,14 @@ dfs = (path) ->
   
   return result
 
+
 run = (exe, args, callback) ->
   proc = spawn(exe, args)
   proc.stderr.on 'data', (buffer) -> console.log buffer.toString()
   proc.on        'exit', (status) ->
     process.exit(1) if status != 0
-    cb() if typeof cb is 'function'
+    callback() if typeof callback is 'function'
+
 
 less =
   test : (filename) -> /// ^./src/(.*)\.less$ ///.exec(filename)
@@ -41,12 +43,14 @@ less =
               ['node_modules/less/bin/lessc', ex[0], './' + ex[1] + '.css'], 
               callback
 
+
 coffee = 
   test : (filename) -> /// ^./src/(.*?)([^/]+)\.(lit)?coffee$ ///.exec(filename)
   run : (ex, callback) -> 
           run 'node', 
               ['node_modules/coffee-script/bin/coffee', '-co', './' + ex[1], ex[0]],
               callback
+
 
 build = (actions, files, callback) ->
   count = 0
@@ -62,17 +66,22 @@ build = (actions, files, callback) ->
         ++count
         action.run(ex, complete)
 
+  ++count
+  complete()
+
+
 files = null
+
 
 task 'build:less', 'Build less files into css', ->
   files ?= dfs('.')
   build [less], files, () ->
-    console.log 'Less files has built!'
+    console.log 'Less files has built'
 
 task 'build:coffee', 'Build coffee files into js', ->
   files ?= dfs('.')
   build [coffee], files, () ->
-    console.log 'Coffee files has built!'
+    console.log 'Coffee files has built'
 
 task 'build:all', 'Build source code into work code', ->
   invoke 'build:less'
