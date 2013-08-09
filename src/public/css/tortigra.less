@@ -1,5 +1,3 @@
-@import "bootstrap.less";
-
 html {height: 100%;}
 body {
   min-height: 100%;
@@ -48,7 +46,7 @@ ul.breadcrumb a { cursor: pointer; }
 
 /* Tree CSS */
 .tree {
-  @expand-size: 14px;
+  @expand-size: 16px;
   padding: 0;
   margin: 0;
 
@@ -100,7 +98,7 @@ ul.breadcrumb a { cursor: pointer; }
   li {
     // Closed
     > .expand {
-      background-image: url("/img/plus.png");
+      background-image: url("/img/tree/closed.png");
     }
 
     > .tree {
@@ -110,7 +108,7 @@ ul.breadcrumb a { cursor: pointer; }
     // Opened
     &.opened {
       > .expand {
-        background-image: url("/img/minus.png");
+        background-image: url("/img/tree/opened.png");
         cursor: pointer;
       }
 
@@ -122,7 +120,7 @@ ul.breadcrumb a { cursor: pointer; }
     // Leaf
     &.leaf { 
       > .expand {
-        background-image: url("/img/list.png");
+        background-image: url("/img/tree/leaf.png");
         cursor: auto;
       }
     }
@@ -130,7 +128,7 @@ ul.breadcrumb a { cursor: pointer; }
     // Loading
     &.loading {
       > .expand {
-        .icon-time;
+        background-image: url("/img/tree/loading.png");
       }
     }
   }
