@@ -74,7 +74,6 @@ ul.breadcrumb a { cursor: pointer; }
     }
 
     > .expand {
-      background-image: url("/img/glyphicons-halflings.png");
       background-repeat: no-repeat;
       width: @expand-size;
       height: @expand-size;
@@ -101,7 +100,7 @@ ul.breadcrumb a { cursor: pointer; }
   li {
     // Closed
     > .expand {
-      .icon-plus;
+      background-image: url("/img/plus.png");
     }
 
     > .tree {
@@ -111,7 +110,7 @@ ul.breadcrumb a { cursor: pointer; }
     // Opened
     &.opened {
       > .expand {
-        .icon-minus;
+        background-image: url("/img/minus.png");
         cursor: pointer;
       }
 
@@ -123,7 +122,7 @@ ul.breadcrumb a { cursor: pointer; }
     // Leaf
     &.leaf { 
       > .expand {
-        .icon-chevron-right;
+        background-image: url("/img/list.png");
         cursor: auto;
       }
     }
