@@ -1,3 +1,4 @@
+require('source-map-support').install()
 express = require('express')
 global.app = express()
 
