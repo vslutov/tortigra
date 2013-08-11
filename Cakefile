@@ -1,5 +1,5 @@
 fs = require('fs')
-spawn = require('child_process').spawn
+child_process = require('child_process')
 require('sugar')
 
 dfs = (path) ->
@@ -28,32 +28,30 @@ dfs = (path) ->
   return result
 
 
-run = (exe, args, callback) ->
-  proc = spawn(exe, args)
-  proc.stderr.on 'data', (buffer) -> console.log buffer.toString()
-  proc.on        'exit', (status) ->
-    process.exit(1) if status != 0
-    callback() if typeof callback is 'function'
+run = (exe, callback) ->
+  await child_process.exec  exe, defer status, stdout, stderr
+
+  console.log stderr.toString() if stderr.toString() isnt ''
+  process.exit(1) if status != 0
+  if typeof callback is 'function' then callback() 
+  else console.log 'Fail'
 
 
 copyFile = (filepath, destination) ->
-  /// 
 
 
 less =
   test : (filename) -> /// ^./src/(.*)\.less$ ///.exec(filename)
   run : (ex, callback) ->
-          run 'node', 
-              ['node_modules/less/bin/lessc', ex[0], './' + ex[1] + '.css'], 
-              callback
+          run 'node node_modules/less/bin/lessc ' + ex[0] + ' ./' + ex[1] + 
+              '.css', callback
 
 
 coffee = 
   test : (filename) -> /// ^./src/(.*?)([^/]+)\.(lit)?coffee$ ///.exec(filename)
   run : (ex, callback) -> 
-          run 'node', 
-              ['node_modules/coffee-script/bin/coffee', '-mco', './' + ex[1], ex[0]],
-              callback
+          run 'node node_modules/coffee-script/bin/coffee -mco ./' + ex[1] + 
+              ' ' + ex[0], callback
 
 
 css = 
@@ -61,24 +59,15 @@ css =
   run : (ex, callback) -> 0
 
 
-
-
-build = (actions, files, callback) ->
-  count = 0
-  complete = () ->
-    --count
-    if count is 0
-      callback()
-
-  for file in files
-    for action in actions
+build = (action, files, callback) ->
+  
+  await
+    for file in files
       ex = action.test(file)
       if ex?
-        ++count
-        action.run(ex, complete)
+        action.run ex, defer stuff
 
-  ++count
-  complete()
+  callback()
 
 
 files = null
@@ -86,12 +75,12 @@ files = null
 
 task 'build:less', 'Build less files into css', ->
   files ?= dfs('.')
-  build [less], files, () ->
-    console.log 'Less files has built'
+  await build less, files, defer stuff
+  console.log 'Less files has built'
 
 task 'build:coffee', 'Build coffee files into js', ->
   files ?= dfs('.')
-  build [coffee], files, () ->
+  build coffee, files, () ->
     console.log 'Coffee files has built'
 
 task 'build:all', 'Build source code into work code', ->
