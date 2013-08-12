@@ -59,18 +59,19 @@ build = (action, files, callback) ->
 
   callback()
 
-task 'build:less', 'Build less files into css', () ->
-  #await build less, files
-  console.log module.files.length
+task 'build:less', 'Build less files into css', (options, callback) ->
+  await dfs '.', defer module.files unless module.files
+  await build less, module.files
   console.log 'Less files has built'
+  callback()
 
-task 'build:coffee',  'Build coffee files into js', () ->
-  #await build coffee, files
-  console.log module.files.length
+task 'build:coffee',  'Build coffee files into js', (options, callback) ->
+  await dfs '.', defer module.files unless module.files
+  await build coffee, module.files
   console.log 'Coffee files has built'
   callback()
 
-task 'build:all',  'Build source code into work code', (callback) ->
+task 'build:all',  'Build source code into work code', (options, callback) ->
   await dfs '.', defer module.files unless module.files
-  invoke 'build:less'
-  invoke 'build:coffee'
+  await invoke 'build:less'
+  await invoke 'build:coffee'
