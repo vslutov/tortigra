@@ -2,6 +2,8 @@ fs = require('fs')
 child_process = require('child_process')
 require('sugar')
 
+files = null
+
 dfs = (path) ->
   result = []
   count = 0
@@ -68,18 +70,17 @@ build = (action, files, callback) ->
 
   callback()
 
-
-files = null
-
+build = (action, files, callback) ->
+  callback()
 
 task 'build:less', 'Build less files into css', ->
   files ?= dfs('.')
-  build less, files, () ->
+  build less, files, ->
     console.log 'Less files has built'
 
 task 'build:coffee', 'Build coffee files into js', ->
   files ?= dfs('.')
-  build coffee, files, () ->
+  build coffee, files, ->
     console.log 'Coffee files has built'
 
 task 'build:all', 'Build source code into work code', ->
