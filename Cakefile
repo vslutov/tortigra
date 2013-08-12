@@ -29,15 +29,14 @@ dfs = (path) ->
 
 
 run = (exe, callback) ->
-  await child_process.exec  exe, defer status, stdout, stderr
+  await child_process.exec exe, defer error, stdout, stderr
+  stderr = stderr.toString()
+  console.log(stderr) if stderr isnt ''
+  callback(error) if typeof callback is 'function'
+  
 
-  console.log stderr.toString() if stderr.toString() isnt ''
-  process.exit(1) if status != 0
-  if typeof callback is 'function' then callback() 
-  else console.log 'Fail'
 
-
-copyFile = (filepath, destination) ->
+copyFile = (filepath, destination) -> 0
 
 
 less =
@@ -50,7 +49,7 @@ less =
 coffee = 
   test : (filename) -> /// ^./src/(.*?)([^/]+)\.(lit)?coffee$ ///.exec(filename)
   run : (ex, callback) -> 
-          run 'node node_modules/coffee-script/bin/coffee -mco ./' + ex[1] + 
+          run 'node node_modules/iced-coffee-script/bin/coffee -mco ./' + ex[1] + 
               ' ' + ex[0], callback
 
 
@@ -60,12 +59,12 @@ css =
 
 
 build = (action, files, callback) ->
-  
-  await
-    for file in files
-      ex = action.test(file)
-      if ex?
-        action.run ex, defer stuff
+
+  for file in files
+    ex = action.test(file)
+    if ex?
+      await action.run ex, defer error
+      throw error if error
 
   callback()
 
@@ -75,8 +74,8 @@ files = null
 
 task 'build:less', 'Build less files into css', ->
   files ?= dfs('.')
-  await build less, files, defer stuff
-  console.log 'Less files has built'
+  build less, files, () ->
+    console.log 'Less files has built'
 
 task 'build:coffee', 'Build coffee files into js', ->
   files ?= dfs('.')
