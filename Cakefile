@@ -2,6 +2,26 @@ fs = require('fs')
 child_process = require('child_process')
 require('sugar')
 
+old = 
+  invoke: global.invoke
+
+invoke = (name, callback) ->
+  cb = ->
+    callback() if typeof callback is 'function'
+
+  if async.tasks[name]
+    async.tasks[name].action options, cb
+  else
+    old.invoke name
+    cb()
+
+async = (task) ->
+  async.tasks[task.name] = task
+async.tasks = []
+
+
+
+
 dfs = (path, callback) ->
   console.log 'dfs start'
   result = [path]
@@ -59,6 +79,7 @@ build = (action, files, callback) ->
 
   callback()
 
+###
 task 'build:less', 'Build less files into css', (options, callback) ->
   await dfs '.', defer module.files unless module.files
   await build less, module.files
@@ -75,3 +96,32 @@ task 'build:all',  'Build source code into work code', (options, callback) ->
   await dfs '.', defer module.files unless module.files
   await invoke 'build:less'
   await invoke 'build:coffee'
+###
+
+task 'sync1', (options) ->
+  console.log 1
+
+async task 'async2', (options, callback) ->
+  console.log 2
+  callback()
+
+task 'sync3', (options) ->
+  console.log 3
+
+task 'syncStart', (options) ->
+  console.log 0.5
+  invoke('sync1')
+  console.log 1.5
+  await invoke 'async2', defer()
+  console.log 2.5
+  invoke('sync3')
+  console.log 3.5
+
+async task 'asyncStart', (options) ->
+  console.log 0.5
+  invoke('sync1')
+  console.log 1.5
+  await invoke 'async2', defer()
+  console.log 2.5
+  invoke('sync3')
+  console.log 3.5
