@@ -2,6 +2,10 @@ fs = require('fs')
 child_process = require('child_process')
 require('sugar')
 
+runOnce = (options, callback) ->
+  await dfs './', defer(module.files)
+  callback()
+
 old = 
   invoke: global.invoke
 options = null
@@ -38,7 +42,7 @@ dfs = (path, callback) ->
   count = 0
 
   while count < result.length
-    await fs.readdir result[count], defer err, files
+    await fs.readdir result[count], defer(err, files)
     if err 
       ++count
     else
@@ -51,7 +55,7 @@ dfs = (path, callback) ->
 
 
 run = (exe, callback) ->
-  await child_process.exec exe, defer error, stdout, stderr
+  await child_process.exec exe, defer(error, stdout, stderr)
   stderr = stderr.toString()
   console.log(stderr) if stderr isnt ''
   callback(error) if typeof callback is 'function'
@@ -84,26 +88,22 @@ build = (action, files, callback) ->
   for file in files
     ex = action.test(file)
     if ex?
-      await action.run ex, defer error
+      await action.run ex, defer(error)
       throw error if error
 
   callback()
 
-###
+
 task 'build:less', 'Build less files into css', (options, callback) ->
-  await dfs '.', defer module.files unless module.files
-  await build less, module.files
+  await build less, module.files, defer()
   console.log 'Less files has built'
   callback()
 
 task 'build:coffee',  'Build coffee files into js', (options, callback) ->
-  await dfs '.', defer module.files unless module.files
-  await build coffee, module.files
+  await build coffee, module.files, defer()
   console.log 'Coffee files has built'
   callback()
 
 task 'build:all',  'Build source code into work code', (options, callback) ->
-  await dfs '.', defer module.files unless module.files
-  await invoke 'build:less'
-  await invoke 'build:coffee'
-###
+  await invoke 'build:less', defer()
+  await invoke 'build:coffee', defer()
