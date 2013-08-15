@@ -2,36 +2,61 @@ fs = require('fs')
 child_process = require('child_process')
 require('sugar')
 
-files = null
 
-dfs = (path) ->
-  result = []
+runOnceCalled = false
+runOnce = (options, callback) ->
+  await dfs './', defer(module.files)
+  callback()
+
+
+old = 
+  invoke: global.invoke
+options = null
+
+invoke = (name, callback) ->
+
+  unless options
+    task '__options', 'Give back an options', (options) -> options
+    options = old.invoke '__options'
+
+  unless runOnceCalled
+    await runOnce options, defer()
+    runOnceCalled = true
+
+  cbCalled = false
+  cb = ->
+    unless cbCalled
+      callback() if typeof callback is 'function'
+      cbCalled = true
+
+  if async.tasks[name]
+    async.tasks[name].action options, cb
+  else
+    old.invoke name
+    cb()
+
+global.invoke = invoke
+
+async = (task) ->
+  async.tasks[task.name] = task
+async.tasks = []
+
+
+dfs = (path, callback) ->
+  result = [path]
   count = 0
 
-  temp = (path) ->
-    try
-      
-      files = fs.readdirSync(path)
-      # Now you may goto catch section
-      
-      result.remove(path)
-      for file in files
-        result.add(path + '/' + file)
+  while count < result.length
+    await fs.readdir result[count], defer(err, files)
+    if err 
+      ++count
+    else
 
-    catch e
-      if e.code is 'ENOTDIR'
-        ++count
-      else
-        throw e
-
-  temp(path)
-  temp(result[count]) while count < result.length
-  
-  return result
+  callback result
 
 
 run = (exe, callback) ->
-  await child_process.exec exe, defer error, stdout, stderr
+  await child_process.exec exe, defer(error, stdout, stderr)
   stderr = stderr.toString()
   console.log(stderr) if stderr isnt ''
   callback(error) if typeof callback is 'function'
@@ -93,26 +118,31 @@ build = (action, files, callback) ->
   for file in files
     ex = action.test(file)
     if ex?
-      await action.run ex, defer err
-      throw err if err
-  callback() if typeof callback is 'function'
+      await action.run ex, defer(error)
+      throw error if error
 
-task 'build:less', 'Build less files into css', ->
-  files ?= dfs('.')
-  build less, files, ->
-    console.log 'Less files has built'
+  callback()
 
-task 'build:coffee', 'Build coffee files into js', ->
-  files ?= dfs('.')
-  build coffee, files, ->
-    console.log 'Coffee files has built'
+async task 'build:less', 'Build less files into css', (options, callback) ->
+  await build less, module.files, defer()
+  console.log 'Less files has been built'
+  callback()
 
-task 'build:media', 'Copy media files to build folder', ->
-  files ?= dfs('.')
-  build publicFiles, files, ->
-    console.log 'Media files has been copied'
+async task 'build:coffee',  'Build coffee files into js', (options, callback) ->
+  await build coffee, module.files, defer()
+  console.log 'Coffee files has been built'
+  callback()
 
-task 'build:all', 'Build source code into work code', ->
-  invoke 'build:less'
-  invoke 'build:coffee'
-  invoke 'build:public'
+async task 'build:public', 'Copy public files to build folder', (options, callback) ->
+  await build publicFiles, module.files, defer()
+  console.log 'Public files has been copied'
+  callback()
+
+task 'build:all',  'Build source code into work code', (options, callback) ->
+  await invoke 'build:less', defer()
+  await invoke 'build:coffee', defer()
+  await invoke 'build:public', defer()
+  console.log 'All files has been built'
+
+
+
