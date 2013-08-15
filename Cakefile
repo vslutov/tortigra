@@ -108,7 +108,6 @@ less = (options) ->
           run 'node node_modules/less/bin/lessc ' + ex[0] + ' ' + \
               options.output + '/' + ex[1] + '.css', callback
 
-
 coffee = (options) ->
   test : (pathname) -> new RegExp('^' + options.source + \
                        '/(.*?)([^/]+)\.(lit)?coffee$').exec(pathname)
@@ -117,7 +116,6 @@ coffee = (options) ->
           run 'node node_modules/iced-coffee-script/bin/coffee -mco ' + \
               options.output + '/' + ex[1] + ' ' + ex[0], callback
 
-
 publicFiles = (options) ->
   less : less(options)
   coffee : coffee(options)
@@ -125,7 +123,13 @@ publicFiles = (options) ->
             unless this.less.test(pathname) or this.coffee.test(pathname)
               new RegExp('^' + options.source + '/public/(.*)$').exec(pathname)
   run : (ex, callback) -> copyFile 'public/' + ex[1], options.source, \
-                          options.output, callback
+                                   options.output, callback
+
+views = (options) ->
+  test : (pathname) -> new RegExp('^' + options.source + '/views/(.*)\\.jade$')\
+                           .exec(pathname)
+  run : (ex, callback) -> copyFile 'views/' + ex[1] + '.jade', options.source, \
+                                   options.output, callback
 
 
 build = (action, files, callback) ->
@@ -154,8 +158,15 @@ async task 'build:public', 'Copy public files to build folder', \
   console.log 'Public files has been copied'
   maybe callback
 
+async task 'build:views', 'Copy view files to build folder', \
+           (options, callback) ->
+  await build views(options), module.files, defer()
+  console.log 'View files has been copied'
+  maybe callback
+
 task 'build:all',  'Build source code into work code', (options, callback) ->
   await invoke 'build:less', defer()
   await invoke 'build:coffee', defer()
   await invoke 'build:public', defer()
+  await invoke 'build:views', defer()
   console.log 'All files has been built'
