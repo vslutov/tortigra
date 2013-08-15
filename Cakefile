@@ -4,9 +4,14 @@ require('sugar')
 
 old = 
   invoke: global.invoke
+options = null
 
 invoke = (name, callback) ->
-  
+
+  unless options
+    task '__options', 'Give back an options', (options) -> options
+    options = old.invoke '__options'
+
   cbCalled = false
   cb = ->
     if not cbCalled
@@ -20,11 +25,11 @@ invoke = (name, callback) ->
   
   cb()
 
+global.invoke = invoke
+
 async = (task) ->
   async.tasks[task.name] = task
 async.tasks = []
-
-
 
 
 dfs = (path, callback) ->
@@ -102,31 +107,3 @@ task 'build:all',  'Build source code into work code', (options, callback) ->
   await invoke 'build:less'
   await invoke 'build:coffee'
 ###
-
-task 'sync1', (options) ->
-  console.log 1
-
-async task 'async2', (options, callback) ->
-  console.log 2
-  callback()
-
-task 'sync3', (options) ->
-  console.log 3
-
-task 'syncStart', (options) ->
-  console.log 0.5
-  invoke('sync1')
-  console.log 1.5
-  await invoke 'async2', defer()
-  console.log 2.5
-  invoke('sync3')
-  console.log 3.5
-
-async task 'asyncStart', (options) ->
-  console.log 0.5
-  invoke('sync1')
-  console.log 1.5
-  await invoke 'async2', defer()
-  console.log 2.5
-  invoke('sync3')
-  console.log 3.5
