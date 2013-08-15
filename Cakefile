@@ -65,15 +65,20 @@ run = (exe, callback) ->
   callback(error) if typeof callback is 'function'
   
 
-
-copyFile = (filepath, source, destination, callback) ->
+mkDir = (pathname, destination, callback) ->
   dirReg = /[^\/]*\//g
 
   path = destination
-  while dir = dirReg.exec(filepath)
+  while dir = dirReg.exec(pathname)
     path += dir
     await fs.mkdir path, defer(err)
-    throw err if err.code isnt 'EEXIST'
+    throw err if err and err.code isnt 'EEXIST'
+
+  callback() if typeof callback is 'function'
+
+copyFile = (pathname, source, destination, callback) ->
+
+  await mkDir pathname, destination, defer()
 
   cbCalled = false
   done = (err) ->
@@ -81,36 +86,38 @@ copyFile = (filepath, source, destination, callback) ->
       callback err if typeof callback is 'function'
       cbCalled = true
     
-  rd = fs.createReadStream(source + filepath)
+  rd = fs.createReadStream(source + pathname)
   rd.on 'error', (err) =>
     done err
   rd.on 'end', (err) =>
     done()
-  wr = fs.createWriteStream(destination + filepath)
+  wr = fs.createWriteStream(destination + pathname)
   wr.on 'error', (err) =>
     done err
   rd.pipe wr
 
 
 less =
-  test : (filepath) -> /// ^\./src/(.*)\.less$ ///.exec(filepath)
+  test : (pathname) -> /// ^\./src/(.*)\.less$ ///.exec(pathname)
   run : (ex, callback) ->
+          await mkDir ex[1], './', defer()
           run 'node node_modules/less/bin/lessc ' + ex[0] + ' ./' + ex[1] + 
               '.css', callback
 
 
 coffee = 
-  test : (filepath) -> /// ^\./src/(.*?)([^/]+)\.(lit)?coffee$ ///.exec(filepath)
+  test : (pathname) -> /// ^\./src/(.*?)([^/]+)\.(lit)?coffee$ ///.exec(pathname)
   run : (ex, callback) -> 
+          await mkDir ex[1], './', defer()
           run 'node node_modules/iced-coffee-script/bin/coffee -mco ./' + ex[1] + 
               ' ' + ex[0], callback
 
 
 publicFiles = 
-  test :  (filepath) -> 
-            unless less.test(filepath) or coffee.test(filepath)
-              /// ^\./src/public/(.*)$ ///.exec(filepath)
-  run : (ex, callback) -> copyFile ex[1], './src/', './', callback
+  test :  (pathname) -> 
+            unless less.test(pathname) or coffee.test(pathname)
+              /// ^\./src/public/(.*)$ ///.exec(pathname)
+  run : (ex, callback) -> copyFile ex[1], './src/public/', './public/', callback
 
 
 build = (action, files, callback) ->
