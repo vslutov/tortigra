@@ -5,7 +5,7 @@ require('sugar')
 
 runOnceCalled = false
 runOnce = (options, callback) ->
-  await dfs './', defer(module.files)
+  await dfs '.', defer(module.files)
   callback()
 
 
@@ -51,7 +51,10 @@ dfs = (path, callback) ->
     if err 
       ++count
     else
-
+      for file in files
+        result.add(result[count] + '/' + file)
+      result.splice(count, 1)
+  
   callback result
 
 
@@ -64,10 +67,8 @@ run = (exe, callback) ->
 
 
 copyFile = (filepath, source, destination, callback) ->
-  # dirReg = /[^\/]*\//g
-  console.log filepath
-  callback()
-  ###
+  dirReg = /[^\/]*\//g
+
   path = destination
   while dir = dirReg.exec(filepath)
     path += dir
@@ -89,8 +90,6 @@ copyFile = (filepath, source, destination, callback) ->
   wr.on 'error', (err) =>
     done err
   rd.pipe wr
-  ###
-
 
 
 less =
