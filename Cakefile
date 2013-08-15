@@ -101,7 +101,7 @@ copyFile = (pathname, source, destination, callback) ->
   rd.pipe wr
 
 
-less =
+less = (options) ->
   test : (pathname) -> /// ^\./src/(.*)\.less$ ///.exec(pathname)
   run : (ex, callback) ->
           await mkDir ex[1], options.output, defer()
@@ -109,7 +109,7 @@ less =
               options.output + '/' + ex[1] + '.css', callback
 
 
-coffee =
+coffee = (options) ->
   test : (pathname) -> new RegExp('^' + options.source + \
                        '/(.*?)([^/]+)\.(lit)?coffee$').exec(pathname)
   run : (ex, callback) ->
@@ -118,9 +118,11 @@ coffee =
               options.output + '/' + ex[1] + ' ' + ex[0], callback
 
 
-publicFiles =
+publicFiles = (options) ->
+  less : less(options)
+  coffee : coffee(options)
   test :  (pathname) ->
-            unless less.test(pathname) or coffee.test(pathname)
+            unless this.less.test(pathname) or this.coffee.test(pathname)
               new RegExp('^' + options.source + '/public/(.*)$').exec(pathname)
   run : (ex, callback) -> copyFile 'public/' + ex[1], options.source, \
                           options.output, callback
@@ -137,18 +139,18 @@ build = (action, files, callback) ->
 
 
 async task 'build:less', 'Build less files into css', (options, callback) ->
-  await build less, module.files, defer()
+  await build less(options), module.files, defer()
   console.log 'Less files has been built'
   maybe callback
 
 async task 'build:coffee',  'Build coffee files into js', (options, callback) ->
-  await build coffee, module.files, defer()
+  await build coffee(options), module.files, defer()
   console.log 'Coffee files has been built'
   maybe callback
 
 async task 'build:public', 'Copy public files to build folder', \
            (options, callback) ->
-  await build publicFiles, module.files, defer()
+  await build publicFiles(options), module.files, defer()
   console.log 'Public files has been copied'
   maybe callback
 
