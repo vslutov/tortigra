@@ -2,11 +2,12 @@ fs = require('fs')
 child_process = require('child_process')
 require('sugar')
 
-
+runOnceCalled = false
 runOnce = (options, callback) ->
-  await dfs '.', defer(module.files)
+  unless runOnceCalled
+    await dfs '.', defer(module.files)
+    runOnceCalled = true
   maybe callback
-runOnce = runOnce.once()
 
 
 old = 
@@ -14,12 +15,11 @@ old =
 options = null
 
 invoke = (name, callback) ->
-
   unless options
     task '__options', 'Give back an options', (options) -> options
     options = old.invoke '__options'
 
-  runOnce()
+  await runOnce options, defer()
 
   cb = (() -> maybe callback).once()
 
@@ -28,6 +28,7 @@ invoke = (name, callback) ->
   else
     old.invoke name
     cb()
+
 global.invoke = invoke
 
 
@@ -38,7 +39,7 @@ async.tasks = []
 
 maybe = (callback) ->
   array = Array.prototype.slice.call(arguments, 1)
-  callback.apply(global, args) if typeof callback is 'function'
+  callback.apply(callback, array) if typeof callback is 'function'
 
 
 dfs = (path, callback) ->
