@@ -146,6 +146,3 @@ task 'build:all',  'Build source code into work code', (options, callback) ->
   await invoke 'build:coffee', defer()
   await invoke 'build:public', defer()
   console.log 'All files has been built'
-
-
-
