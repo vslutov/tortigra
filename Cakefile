@@ -6,14 +6,19 @@ old =
   invoke: global.invoke
 
 invoke = (name, callback) ->
+  
+  cbCalled = false
   cb = ->
-    callback() if typeof callback is 'function'
+    if not cbCalled
+      callback() if typeof callback is 'function'
+      cbCalled = true
 
   if async.tasks[name]
     async.tasks[name].action options, cb
   else
     old.invoke name
-    cb()
+  
+  cb()
 
 async = (task) ->
   async.tasks[task.name] = task
