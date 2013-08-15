@@ -2,24 +2,29 @@ fs = require('fs')
 child_process = require('child_process')
 require('sugar')
 
+options = null
+option '-s', '--source [DIR]', 'directory with source code'
+option '-o', '--output [DIR]', 'directory for compiled code'
+
 runOnceCalled = false
-runOnce = (options, callback) ->
+runOnce = (callback) ->
   unless runOnceCalled
-    await dfs '.', defer(module.files)
+    options.source ?= './src'
+    options.output ?= '.'
+    await dfs options.source, defer(module.files)
     runOnceCalled = true
   maybe callback
 
 
 old =
   invoke: global.invoke
-options = null
 
 invoke = (name, callback) ->
   unless options
     task '__options', 'Give back an options', (options) -> options
     options = old.invoke '__options'
 
-  await runOnce options, defer()
+  await runOnce defer()
 
   cb = (() -> maybe callback).once()
 
@@ -68,7 +73,7 @@ run = (exe, callback) ->
 mkDir = (pathname, destination, callback) ->
   dirReg = /[^\/]*\//g
 
-  path = destination
+  path = destination + '/'
   while dir = dirReg.exec(pathname)
     path += dir
     await fs.mkdir path, defer(err)
@@ -77,8 +82,10 @@ mkDir = (pathname, destination, callback) ->
   maybe callback
 
 copyFile = (pathname, source, destination, callback) ->
-
   await mkDir pathname, destination, defer()
+
+  source += '/'
+  destination += '/'
 
   cbCalled = false
   done = ((error) -> maybe callback, error).once()
@@ -97,25 +104,26 @@ copyFile = (pathname, source, destination, callback) ->
 less =
   test : (pathname) -> /// ^\./src/(.*)\.less$ ///.exec(pathname)
   run : (ex, callback) ->
-          await mkDir ex[1], './', defer()
-          run 'node node_modules/less/bin/lessc ' + ex[0] + ' ./' + ex[1] +
-              '.css', callback
+          await mkDir ex[1], options.output, defer()
+          run 'node node_modules/less/bin/lessc ' + ex[0] + ' ' + \
+              options.output + '/' + ex[1] + '.css', callback
 
 
 coffee =
-  test : (pathname) -> /// ^\./src/(.*?)([^/]+)\.(lit)?coffee$ /// \
-                       .exec(pathname)
+  test : (pathname) -> new RegExp('^' + options.source + \
+                       '/(.*?)([^/]+)\.(lit)?coffee$').exec(pathname)
   run : (ex, callback) ->
-          await mkDir ex[1], './', defer()
-          run 'node node_modules/iced-coffee-script/bin/coffee -mco ./' + \
-              ex[1] + ' ' + ex[0], callback
+          await mkDir ex[1], options.output, defer()
+          run 'node node_modules/iced-coffee-script/bin/coffee -mco ' + \
+              options.output + '/' + ex[1] + ' ' + ex[0], callback
 
 
 publicFiles =
   test :  (pathname) ->
             unless less.test(pathname) or coffee.test(pathname)
-              /// ^\./src/public/(.*)$ ///.exec(pathname)
-  run : (ex, callback) -> copyFile ex[1], './src/public/', './public/', callback
+              new RegExp('^' + options.source + '/public/(.*)$').exec(pathname)
+  run : (ex, callback) -> copyFile 'public/' + ex[1], options.source, \
+                          options.output, callback
 
 
 build = (action, files, callback) ->
@@ -126,6 +134,7 @@ build = (action, files, callback) ->
       throw error if error
 
   maybe callback
+
 
 async task 'build:less', 'Build less files into css', (options, callback) ->
   await build less, module.files, defer()
