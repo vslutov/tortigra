@@ -38,40 +38,64 @@ run = (exe, callback) ->
   
 
 
-copyFile = (filepath, destination) -> 0
+copyFile = (filepath, source, destination, callback) ->
+  # dirReg = /[^\/]*\//g
+  console.log filepath
+  callback()
+  ###
+  path = destination
+  while dir = dirReg.exec(filepath)
+    path += dir
+    await fs.mkdir path, defer(err)
+    throw err if err.code isnt 'EEXIST'
+
+  cbCalled = false
+  done = (err) ->
+    if not cbCalled
+      callback err if typeof callback is 'function'
+      cbCalled = true
+    
+  rd = fs.createReadStream(source + filepath)
+  rd.on 'error', (err) =>
+    done err
+  rd.on 'end', (err) =>
+    done()
+  wr = fs.createWriteStream(destination + filepath)
+  wr.on 'error', (err) =>
+    done err
+  rd.pipe wr
+  ###
+
 
 
 less =
-  test : (filename) -> /// ^./src/(.*)\.less$ ///.exec(filename)
+  test : (filepath) -> /// ^\./src/(.*)\.less$ ///.exec(filepath)
   run : (ex, callback) ->
           run 'node node_modules/less/bin/lessc ' + ex[0] + ' ./' + ex[1] + 
               '.css', callback
 
 
 coffee = 
-  test : (filename) -> /// ^./src/(.*?)([^/]+)\.(lit)?coffee$ ///.exec(filename)
+  test : (filepath) -> /// ^\./src/(.*?)([^/]+)\.(lit)?coffee$ ///.exec(filepath)
   run : (ex, callback) -> 
           run 'node node_modules/iced-coffee-script/bin/coffee -mco ./' + ex[1] + 
               ' ' + ex[0], callback
 
 
-css = 
-  test : (filename) -> /// ^./src/(.*)\.css$ ///.exec(filename)
-  run : (ex, callback) -> 0
+publicFiles = 
+  test :  (filepath) -> 
+            unless less.test(filepath) or coffee.test(filepath)
+              /// ^\./src/public/(.*)$ ///.exec(filepath)
+  run : (ex, callback) -> copyFile ex[1], './src/', './', callback
 
 
 build = (action, files, callback) ->
-
   for file in files
     ex = action.test(file)
     if ex?
-      await action.run ex, defer error
-      throw error if error
-
-  callback()
-
-build = (action, files, callback) ->
-  callback()
+      await action.run ex, defer err
+      throw err if err
+  callback() if typeof callback is 'function'
 
 task 'build:less', 'Build less files into css', ->
   files ?= dfs('.')
@@ -83,6 +107,12 @@ task 'build:coffee', 'Build coffee files into js', ->
   build coffee, files, ->
     console.log 'Coffee files has built'
 
+task 'build:media', 'Copy media files to build folder', ->
+  files ?= dfs('.')
+  build publicFiles, files, ->
+    console.log 'Media files has been copied'
+
 task 'build:all', 'Build source code into work code', ->
   invoke 'build:less'
   invoke 'build:coffee'
+  invoke 'build:public'
