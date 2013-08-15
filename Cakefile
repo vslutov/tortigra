@@ -10,7 +10,7 @@ runOnce = (options, callback) ->
   maybe callback
 
 
-old = 
+old =
   invoke: global.invoke
 options = null
 
@@ -48,13 +48,13 @@ dfs = (path, callback) ->
 
   while count < result.length
     await fs.readdir result[count], defer(err, files)
-    if err 
+    if err
       ++count
     else
       for file in files
         result.add(result[count] + '/' + file)
       result.splice(count, 1)
-  
+
   maybe callback, result
 
 
@@ -63,7 +63,7 @@ run = (exe, callback) ->
   stderr = stderr.toString()
   console.log(stderr) if stderr isnt ''
   maybe callback, error
-  
+
 
 mkDir = (pathname, destination, callback) ->
   dirReg = /[^\/]*\//g
@@ -82,7 +82,7 @@ copyFile = (pathname, source, destination, callback) ->
 
   cbCalled = false
   done = ((error) -> maybe callback, error).once()
-    
+
   rd = fs.createReadStream(source + pathname)
   rd.on 'error', (err) ->
     done err
@@ -98,20 +98,21 @@ less =
   test : (pathname) -> /// ^\./src/(.*)\.less$ ///.exec(pathname)
   run : (ex, callback) ->
           await mkDir ex[1], './', defer()
-          run 'node node_modules/less/bin/lessc ' + ex[0] + ' ./' + ex[1] + 
+          run 'node node_modules/less/bin/lessc ' + ex[0] + ' ./' + ex[1] +
               '.css', callback
 
 
-coffee = 
-  test : (pathname) -> /// ^\./src/(.*?)([^/]+)\.(lit)?coffee$ ///.exec(pathname)
-  run : (ex, callback) -> 
+coffee =
+  test : (pathname) -> /// ^\./src/(.*?)([^/]+)\.(lit)?coffee$ /// \
+                       .exec(pathname)
+  run : (ex, callback) ->
           await mkDir ex[1], './', defer()
-          run 'node node_modules/iced-coffee-script/bin/coffee -mco ./' + ex[1] + 
-              ' ' + ex[0], callback
+          run 'node node_modules/iced-coffee-script/bin/coffee -mco ./' + \
+              ex[1] + ' ' + ex[0], callback
 
 
-publicFiles = 
-  test :  (pathname) -> 
+publicFiles =
+  test :  (pathname) ->
             unless less.test(pathname) or coffee.test(pathname)
               /// ^\./src/public/(.*)$ ///.exec(pathname)
   run : (ex, callback) -> copyFile ex[1], './src/public/', './public/', callback
@@ -136,7 +137,8 @@ async task 'build:coffee',  'Build coffee files into js', (options, callback) ->
   console.log 'Coffee files has been built'
   maybe callback
 
-async task 'build:public', 'Copy public files to build folder', (options, callback) ->
+async task 'build:public', 'Copy public files to build folder', \
+           (options, callback) ->
   await build publicFiles, module.files, defer()
   console.log 'Public files has been copied'
   maybe callback
