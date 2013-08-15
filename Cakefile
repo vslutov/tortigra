@@ -2,6 +2,7 @@ fs = require('fs')
 child_process = require('child_process')
 require('sugar')
 
+runOnceCalled = false
 runOnce = (options, callback) ->
   await dfs './', defer(module.files)
   callback()
@@ -16,9 +17,13 @@ invoke = (name, callback) ->
     task '__options', 'Give back an options', (options) -> options
     options = old.invoke '__options'
 
+  unless runOnceCalled
+    await runOnce options, defer()
+    runOnceCalled = true
+
   cbCalled = false
   cb = ->
-    if not cbCalled
+    unless cbCalled
       callback() if typeof callback is 'function'
       cbCalled = true
 
@@ -37,7 +42,6 @@ async.tasks = []
 
 
 dfs = (path, callback) ->
-  console.log 'dfs start'
   result = [path]
   count = 0
 
@@ -50,7 +54,6 @@ dfs = (path, callback) ->
         result.add(result[count] + '/' + file)
       result.splice(count, 1)
   
-  console.log 'dfs end'
   callback result
 
 
@@ -94,12 +97,12 @@ build = (action, files, callback) ->
   callback()
 
 
-task 'build:less', 'Build less files into css', (options, callback) ->
+async task 'build:less', 'Build less files into css', (options, callback) ->
   await build less, module.files, defer()
   console.log 'Less files has built'
   callback()
 
-task 'build:coffee',  'Build coffee files into js', (options, callback) ->
+async task 'build:coffee',  'Build coffee files into js', (options, callback) ->
   await build coffee, module.files, defer()
   console.log 'Coffee files has built'
   callback()
